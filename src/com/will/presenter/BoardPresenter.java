@@ -12,7 +12,16 @@ public interface BoardPresenter {
 	 * @param y 待挖开的纵坐标
 	 * @return 挖开方块的值，参照Cell中的设定
 	 */
-	int digging(int x, int y);
+	int diggingForGC(int x, int y);
 	
 	CellView findCellView(int x, int y);
+	
+	Player getPlayer();
+	
+	/**
+	 * 当方块被挖开时调用该方法，将CellView换成DugView（已挖开的方块） 
+	 * @param x 待挖开的横坐标
+	 * @param y 待挖开的纵坐标
+	 */
+	void changeCell2dug(int x,int y);
 }
