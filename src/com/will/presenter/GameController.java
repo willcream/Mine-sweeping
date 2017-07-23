@@ -40,11 +40,15 @@ public class GameController extends User{
 		digAround(x, y);
 	}
 	
-	public JPanel gameStart(int width, int height, Player p){
-		bp = new Board(width, height);
-		JPanel cellPanel = bp.ready(width, height);
+	public JPanel gamePreStart(Player p){
+		bp = new Board();
+		JPanel cellPanel = bp.ready();
 		bp.setPlayer(p);
 		return cellPanel;
+	}
+	
+	public void gameStart(int clickedX, int clickedY){
+		bp.putMineAndNumber(clickedX, clickedY);
 	}
 	
 	public void gameRestart(){

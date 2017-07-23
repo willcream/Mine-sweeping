@@ -12,4 +12,5 @@ public interface CVBoardPresenter extends BoardPresenter{
 	
 	void explode(int x, int y);
 	
+	void firstBloodReport(int clickedX, int clickedY);
 }

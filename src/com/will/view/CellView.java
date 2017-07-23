@@ -2,6 +2,7 @@ package com.will.view;
 
 
 import java.awt.Color;
+import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 
 import javax.swing.ImageIcon;
@@ -19,6 +20,7 @@ public class CellView extends JButton{
 	private final static int STATE_FLAG = 1;
 	private final static int STATE_QUESTION_MARK = 2;
 	private final static int STATE_DUG = 3;
+	private final static int STATE_EXPLODE = 4;
 	
 	private final static int TO_NONE = 10;
 	private final static int TO_FLAG = 11;
@@ -29,9 +31,15 @@ public class CellView extends JButton{
 	public CellView(Cell cell) {
 		data = cell;
 		state = STATE_NONE;
-		
+		bp = Board.getBoard();
+		initializeView();
 		int counter = 0;
 		
+	}
+
+	private void initializeView(){
+		//方便显示文字
+		this.setMargin(new Insets(0,0,0,0));
 		this.setSize(25, 25);
 		this.addMouseListener(new MouseAdapter() {
 			boolean isDouble = true;
@@ -42,6 +50,7 @@ public class CellView extends JButton{
 
 			@Override
 			public void mouseReleased(java.awt.event.MouseEvent e) {
+				bp.firstBloodReport(data.x, data.y);
 				if(isDouble){
 					//TODO 挖9格
 					bp.getPlayer().digAround(data.x, data.y);
@@ -54,7 +63,6 @@ public class CellView extends JButton{
 				
 				int clicked = e.getButton();
 				if(clicked == java.awt.event.MouseEvent.BUTTON1){
-					//TODO 开挖
 					digChange();
 					System.out.println("123");
 				}
@@ -84,9 +92,8 @@ public class CellView extends JButton{
 			
 			
 		});
-		
 	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		int ox = ((CellView)obj).getData().x;
@@ -104,9 +111,11 @@ public class CellView extends JButton{
 	}
 	
 
-	private void digChange(){
+	public void digChange(){
+		if(data.getVal() > 0 && data.getVal() < 9)
+			this.setText(""+data.getVal());
 		this.setEnabled(false);
-		this.setBackground(Color.GRAY);
+		this.setBackground(Color.LIGHT_GRAY);
 		state = STATE_DUG;
 		data.setDug(true);
 	}
@@ -132,5 +141,22 @@ public class CellView extends JButton{
 			break;			
 		}
 	}
-
+	
+	public void boom(){
+		this.setIcon(new ImageIcon("boom.png"));
+		this.setEnabled(false);
+		state = STATE_EXPLODE;
+	}
+	
+	public void setDataVal(int val){
+		data.setVal(val);
+	}
+	
+	public boolean isMine(){
+		if(data.getVal() == Cell.MINE){
+			return true;
+		}
+		else
+			return false;
+	}
 }

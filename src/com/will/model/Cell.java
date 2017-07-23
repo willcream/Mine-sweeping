@@ -14,6 +14,11 @@ public class Cell{
 		dug = false;
 	}
 	
+	/**
+	 * 这个构造方法是用来生成一个临时的Cell，用于在List中寻找有该坐标的CellView
+	 * @param x
+	 * @param y
+	 */
 	public Cell(int x, int y){
 		this.x = x;
 		this.y = y;
