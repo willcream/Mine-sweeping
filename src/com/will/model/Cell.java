@@ -19,4 +19,53 @@ public class Cell{
 		this.y = y;
 		dug = false;
 	}
+	
+	/**
+	 * 判断是否可以挖掘
+	 * @return 
+	 */
+	public boolean canGoOnDig(){
+		if(val == 0 && !dug){
+			return true;
+		}else{
+			System.out.println("Cell---val:"+val);
+			return false;
+		}
+				
+	}
+
+	public boolean isDug() {
+		return dug;
+	}
+
+	public void setDug(boolean dug) {
+		this.dug = dug;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public int getVal() {
+		return val;
+	}
+
+	public void setVal(int val) {
+		this.val = val;
+	}
+	
+	
+	
 }

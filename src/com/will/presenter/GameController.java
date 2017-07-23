@@ -1,19 +1,37 @@
 package com.will.presenter;
 
-import java.util.ArrayList;
+import javax.swing.JPanel;
 
-import com.will.model.Cell;
-import com.will.view.CellView;
+import com.will.view.Board;
 
 public class GameController extends User{
 	public final String name = "GC";
+	private static GameController gc;
 	
-	private ArrayList<CellView> aroundList;
-	private BoardPresenter bp;
+	private GCBoardPresenter bp;
+	
+	public static GameController getGC(){
+		if(gc == null){
+			gc = new GameController();
+		}
+		return gc;
+	}
+	
+	private GameController(){
+		
+	}
+	
+	private GameController(GCBoardPresenter gcbp) {
+		bp = gcbp;
+	}
+	
 
 	@Override
-	public void dig(int x, int y) {
+	public boolean dig(int x, int y) {
 		//TODO 挖开方法待完善
+		return false;
+		
+		
 	}
 
 	@Override
@@ -22,52 +40,15 @@ public class GameController extends User{
 		digAround(x, y);
 	}
 	
-	private void digAround(int oldx, int oldy){
-		getSurround(oldx, oldy);
-		if(aroundList == null || aroundList.size() == 0)
-			return ;
-		for(CellView cv : aroundList){
-			Cell tempc = cv.getData();
-			dig(tempc.x, tempc.y);
-			digAround(tempc.x, tempc.y);
-		}
-		aroundList = null;
+	public JPanel gameStart(int width, int height, Player p){
+		bp = new Board(width, height);
+		JPanel cellPanel = bp.ready(width, height);
+		bp.setPlayer(p);
+		return cellPanel;
 	}
 	
-	private void getSurround(int oldx,int oldy){
-		//初始化周围格的列表
-		aroundList = new ArrayList<>();
+	public void gameRestart(){
 		
-		int w = bp.getWidth();
-		int h = bp.getHeight();
-		CellView tempcv = null;
-		if((tempcv = bp.findCellView(oldx, oldy-1)) != null){
-			aroundList.add(tempcv);
-		}
-		if((tempcv = bp.findCellView(oldx, oldy+1)) != null){
-			aroundList.add(tempcv);
-		}
-		if((tempcv = bp.findCellView(oldx-1, oldy)) != null){
-			aroundList.add(tempcv);
-		}
-		if((tempcv = bp.findCellView(oldx-1, oldy-1)) != null){
-			aroundList.add(tempcv);
-		}
-		if((tempcv = bp.findCellView(oldx-1, oldy+1)) != null){
-			aroundList.add(tempcv);
-		}
-		if((tempcv = bp.findCellView(oldx+1, oldy)) != null){
-			aroundList.add(tempcv);
-		}
-		if((tempcv = bp.findCellView(oldx+1, oldy-1)) != null){
-			aroundList.add(tempcv);
-		}
-		if((tempcv = bp.findCellView(oldx+1, oldy+1)) != null){
-			aroundList.add(tempcv);
-		}
-		
-		if(aroundList.size() > 8){
-			System.err.println("周围格列表出事了");
-		}
 	}
+	
 }

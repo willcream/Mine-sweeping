@@ -1,5 +1,6 @@
 package com.will.view;
 
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
 import javax.swing.ImageIcon;
@@ -9,28 +10,21 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.will.model.Cell;
+import com.will.presenter.GameController;
+import com.will.presenter.Player;
 
 public class Main {
 
 	public static void main(String[] args) {
 		JFrame mainWindow = new JFrame();
-		mainWindow.setSize(240, 260);
-		GridLayout gl = new GridLayout(10, 10);
-		mainWindow.setLayout(gl);
-		for(int i = 0; i < 10; i++)
-			for(int j = 0; j < 10; j++){
-				CellView jb1 = new CellView(new Cell());
-				jb1.setSize(22, 22);
-				jb1.change2flag();
-				mainWindow.add(jb1);
-			}
+		mainWindow.setSize(300, 300);
+		mainWindow.setLayout(new BorderLayout());
+		GameController gc = GameController.getGC();
 		
-//		JButton jb2 = new JButton(new ImageIcon("question-mark.png"));
-//		jb2.setSize(16, 16);
-//		
-//		mainWindow.add(jb2);
-		
-		
+		Player p = new Player();
+		JPanel cellPanel = gc.gameStart(240, 240, p);
+		mainWindow.add(cellPanel,BorderLayout.CENTER);
+		mainWindow.add(new JPanel(),BorderLayout.SOUTH);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		mainWindow.setVisible(true);

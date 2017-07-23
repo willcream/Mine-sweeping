@@ -3,7 +3,8 @@ package com.will.presenter;
 public class Player extends User {
 
 	@Override
-	public void dig(int x, int y) {
+	public boolean dig(int x, int y) {
+		return false;
 		// TODO Auto-generated method stub
 
 	}
