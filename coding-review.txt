@@ -1,0 +1,9 @@
+在JButton中使用setMargin(new Insets(0,0,0,0))可以在其很小的情况下照样显示文本
+
+鼠标单键和双键（左右键同时按）都要响应：
++++思路：默认双键响应，mouseReleased中判断是否双键，mousePressed中执行。
++++方法：使用MouseAdapter（不知道为什么MouseListener不管用），创建一个内部标识量isDouble，isDouble默认为真，mousePressed里判断是否属于双键，不是则isDouble为假。在mouseReleased中isDouble为真立即返回，否则开始判断单键的情况。
+
+单例模式实在是天才之作！它能够保证整个项目中调用的这个对象都是同一个。
+
+要在list中添加时识别有没有重复，应该先用contains()，直接使用add是不会进行判断。
