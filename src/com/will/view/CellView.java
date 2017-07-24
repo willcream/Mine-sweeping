@@ -9,7 +9,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import com.will.model.Cell;
+import com.will.model.GameInfo;
 import com.will.presenter.CVBoardPresenter;
+import com.will.presenter.Player;
 
 public class CellView extends JButton{
 	private Cell data;
@@ -50,25 +52,30 @@ public class CellView extends JButton{
 
 			@Override
 			public void mouseReleased(java.awt.event.MouseEvent e) {
+				Player p = Player.getPlayer();
 				bp.firstBloodReport(data.x, data.y);
 				if(isDouble){
 					//TODO 挖9格
-					bp.getPlayer().digAround(data.x, data.y);
+					p.digAround(data.x, data.y);
 					return;
 				}
 				
 				//挖开了就不管了。
-				if(state == STATE_DUG)
+				if(state == STATE_DUG || state == STATE_EXPLODE)
 					return;
 				
 				int clicked = e.getButton();
 				if(clicked == java.awt.event.MouseEvent.BUTTON1){
-					digChange();
-					System.out.println("123");
+					if(isMine())
+						boom();
+					else{
+						digChange();
+					}
+					
 				}
 				else if(clicked == java.awt.event.MouseEvent.BUTTON2){
 					//TODO 这里9格已经超出了一个格的控制范围
-					bp.getPlayer().digAround(data.x, data.y);
+					p.digAround(data.x, data.y);
 				}
 				else if(clicked == java.awt.event.MouseEvent.BUTTON3){
 					System.out.println("gg");
@@ -143,8 +150,9 @@ public class CellView extends JButton{
 	}
 	
 	public void boom(){
-		this.setIcon(new ImageIcon("boom.png"));
 		this.setEnabled(false);
+		this.setDisabledIcon(new ImageIcon("boom.png"));
+		this.setIcon(new ImageIcon("boom.png"));
 		state = STATE_EXPLODE;
 	}
 	

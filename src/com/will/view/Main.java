@@ -21,9 +21,13 @@ public class Main {
 		JFrame mainWindow = new JFrame();
 		mainWindow.setSize(300, 300);
 		mainWindow.setLayout(new BorderLayout());
-		GameController gc = GameController.getGC();
+		//GameInfo一定要最先初始化
 		GameInfo.createGameInfo(GameInfo.LEVEL_LOW);
-		Player p = new Player();		
+		GameController gc = GameController.getGC();
+		Player p = Player.newPlayer("Mike");
+		
+		
+				
 		
 		
 		

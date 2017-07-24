@@ -1,5 +1,7 @@
 package com.will.model;
 
+import com.will.presenter.Player;
+
 public class GameInfo {
 	public static final int LEVEL_LOW = 0;
 	public static final int LEVEL_NORMAL = 1;
@@ -90,8 +92,5 @@ public class GameInfo {
 	public int getMineNum() {
 		return mineNum;
 	}
-	
-	
-	
 	
 }

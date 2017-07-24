@@ -8,8 +8,8 @@ import com.will.view.CellView;
 
 public abstract class User {
 	public final String name = "user";
-	private ArrayList<CellView> aroundList;
-	private GCBoardPresenter bp;
+	protected ArrayList<Integer> aroundIndexList;
+	protected GCBoardPresenter bp;
 	
 	/**
 	 * @param type 方块的类别：空、数字、雷
@@ -20,52 +20,52 @@ public abstract class User {
 	public abstract void afterDug(int x, int y);
 	
 	public void digAround(int oldx, int oldy){
-		getSurround(oldx, oldy);
-		if(aroundList == null || aroundList.size() == 0)
-			return ;
-		for(CellView cv : aroundList){
-			Cell tempc = cv.getData();
-			dig(tempc.x, tempc.y);
-			digAround(tempc.x, tempc.y);
-		}
-		aroundList = null;
+//		aroundIndexList = (ArrayList<Integer>) bp.getSurround(oldx, oldy);
+//		if(aroundIndexList == null || aroundIndexList.size() == 0)
+//			return ;
+//		for(Integer i : aroundIndexList){
+//			Cell tempc = .getData();
+//			dig(tempc.x, tempc.y);
+//			digAround(tempc.x, tempc.y);
+//		}
+//		aroundIndexList = null;
 	}
 	
-	public List<CellView> getSurround(int oldx,int oldy){
-		//初始化周围格的列表
-		aroundList = new ArrayList<>();
-		
-		int w = bp.getWidth();
-		int h = bp.getHeight();
-		CellView tempcv = null;
-		if((tempcv = bp.findCellView(oldx, oldy-1)) != null){
-			aroundList.add(tempcv);
-		}
-		if((tempcv = bp.findCellView(oldx, oldy+1)) != null){
-			aroundList.add(tempcv);
-		}
-		if((tempcv = bp.findCellView(oldx-1, oldy)) != null){
-			aroundList.add(tempcv);
-		}
-		if((tempcv = bp.findCellView(oldx-1, oldy-1)) != null){
-			aroundList.add(tempcv);
-		}
-		if((tempcv = bp.findCellView(oldx-1, oldy+1)) != null){
-			aroundList.add(tempcv);
-		}
-		if((tempcv = bp.findCellView(oldx+1, oldy)) != null){
-			aroundList.add(tempcv);
-		}
-		if((tempcv = bp.findCellView(oldx+1, oldy-1)) != null){
-			aroundList.add(tempcv);
-		}
-		if((tempcv = bp.findCellView(oldx+1, oldy+1)) != null){
-			aroundList.add(tempcv);
-		}
-		
-		if(aroundList.size() > 8){
-			System.err.println("周围格列表出事了");
-		}
-		return aroundList;
-	}
+//	public List<CellView> getSurround(int oldx,int oldy){
+//		//初始化周围格的列表
+//		aroundList = new ArrayList<>();
+//		
+//		int w = bp.getWidth();
+//		int h = bp.getHeight();
+//		CellView tempcv = null;
+//		if((tempcv = bp.findCellView(oldx, oldy-1)) != null){
+//			aroundList.add(tempcv);
+//		}
+//		if((tempcv = bp.findCellView(oldx, oldy+1)) != null){
+//			aroundList.add(tempcv);
+//		}
+//		if((tempcv = bp.findCellView(oldx-1, oldy)) != null){
+//			aroundList.add(tempcv);
+//		}
+//		if((tempcv = bp.findCellView(oldx-1, oldy-1)) != null){
+//			aroundList.add(tempcv);
+//		}
+//		if((tempcv = bp.findCellView(oldx-1, oldy+1)) != null){
+//			aroundList.add(tempcv);
+//		}
+//		if((tempcv = bp.findCellView(oldx+1, oldy)) != null){
+//			aroundList.add(tempcv);
+//		}
+//		if((tempcv = bp.findCellView(oldx+1, oldy-1)) != null){
+//			aroundList.add(tempcv);
+//		}
+//		if((tempcv = bp.findCellView(oldx+1, oldy+1)) != null){
+//			aroundList.add(tempcv);
+//		}
+//		
+//		if(aroundList.size() > 8){
+//			System.err.println("周围格列表出事了");
+//		}
+//		return aroundList;
+//	}
 }

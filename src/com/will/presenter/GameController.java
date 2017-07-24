@@ -41,7 +41,7 @@ public class GameController extends User{
 	}
 	
 	public JPanel gamePreStart(Player p){
-		bp = new Board();
+		bp = Board.getBoard();
 		JPanel cellPanel = bp.ready();
 		bp.setPlayer(p);
 		return cellPanel;

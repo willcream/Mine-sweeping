@@ -39,7 +39,7 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 			return board;
 	}
 	
-	public Board(){
+	private Board(){
 		gameInfo = GameInfo.getGameInfo();
 		w = gameInfo.getBoardWidth();
 		h = gameInfo.getBoardHeight();
@@ -71,13 +71,8 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	
 	/*=====================For CellView============================*/
 	@Override
-	public Player getPlayer() {
-		return player;
-	}
-	
-	@Override
 	public boolean checkFlagAround(int x, int y) {
-		ArrayList<CellView> surrond = (ArrayList<CellView>) player.getSurround(x, y);
+		ArrayList<Integer> surrondIndex = (ArrayList<Integer>) getSurround(x, y);
 		//TODO 判断:当四周的红旗数=该方格的数字时，开始挖周围9格
 		return false;
 	}
@@ -141,6 +136,7 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 			for(int j = 1; j <= colNum; j++){
 				//TODO 录入格子信息,并将格子放到盘面中
 				CellView cv = new CellView(new Cell(i,j));
+				cvlist.add(cv);
 				panel.add(cv);
 			}
 		}
@@ -204,9 +200,10 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 			
 			//获取这个位置的雷在cvlist中的index
 			int index = getCellViewIndex(tempX, tempY);
-			System.out.println(mineIndexList.contains(index));
-			if(!mineIndexList.contains(index))
+			if(!mineIndexList.contains(index)){
 				mineIndexList.add(index);
+				cvlist.get(index).setDataVal(Cell.MINE);
+			}
 			else{
 				//这个坐标不能用，回退一次
 				i--;
@@ -219,12 +216,15 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 		for(CellView cv : cvlist){
 			getSurround(cv.getData().x, cv.getData().y);
 			int mineCounter = 0;
-			for(Integer i : mineIndexList){
+			//判断周围9格中哪些是雷
+			for(Integer i : aroundIndexList){
 				if(cvlist.get(i).isMine())
 					mineCounter++;
 			}
+			
 			if(mineCounter < 9){
-				cv.setDataVal(mineCounter);
+				if(cv.getData().getVal() == Cell.EMPTY)
+					cv.setDataVal(mineCounter);
 			}
 			else{
 				System.out.println("Board---统计雷时出错");
@@ -234,8 +234,8 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 		
 	}
 	
-	
-	private void getSurround(int oldx,int oldy){
+	@Override
+	public List<Integer> getSurround(int oldx,int oldy){
 		//初始化周围格的列表
 		aroundIndexList = new ArrayList<>();
 		
@@ -270,6 +270,7 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 		if(aroundIndexList.size() > 8){
 			System.err.println("Board---找周围格时出事了");
 		}
+		return aroundIndexList;
 	}
 
 }
