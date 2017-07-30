@@ -8,7 +8,38 @@ public interface CVBoardPresenter extends BoardPresenter{
 	 */
 	boolean checkFlagAround(int x, int y);
 	
-	void explode(int x, int y);
 	
+	
+	/**
+	 * 点了第一下后通知棋盘，为后面布置雷和数字做准备
+	 * @param clickedX
+	 * @param clickedY
+	 */
 	void firstBloodReport(int clickedX, int clickedY);
+
+	
+	
+	/**
+	 * 玩家挖到炸弹后调用该方法，用于结束游戏
+	 */
+	void explodeReport();
+	
+	
+	
+	/**
+	 * 玩家点了一个方格后开始自动挖掘周围的空白格
+	 * @param x
+	 * @param y
+	 */
+	void autoDigAround(int x, int y);
+	
+	
+	
+	/**
+	 * 用来满足鼠标中键的点击和左右双键的点击
+	 * @param centerX 中心方块的横坐标
+	 * @param centerY 中心方块的纵坐标
+	 */
+	void digAround(int centerX, int centerY);
+	
 }

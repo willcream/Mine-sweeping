@@ -74,23 +74,19 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	public boolean checkFlagAround(int x, int y) {
 		ArrayList<Integer> surrondIndex = (ArrayList<Integer>) getSurround(x, y);
 		//TODO 判断:当四周的红旗数=该方格的数字时，开始挖周围9格
-		return false;
+		int val = findCellView(x, y).getData().getVal();
+		int flagCounter = 0;
+		for(Integer i : surrondIndex){
+			if(cvlist.get(i).isFlagMarked())
+				flagCounter++;
+		}
+		System.out.println("flag number:"+flagCounter);
+		if(val == flagCounter)
+			return true;
+		else
+			return false;
 	}
 
-	@Override
-	public void explode(int x, int y) {
-		if(mineIndexList == null || mineIndexList.size() == 0){
-			System.out.println("爆炸函数跪了");
-			return;
-		}
-		
-		for(Integer cvpos : mineIndexList){
-			cvlist.get(cvpos).boom();
-		}
-		
-		//TODO 需要一个弹窗接口
-	}
-	
 	@Override
 	public void firstBloodReport(int clickedX, int clickedY) {
 		if(firstBlood){
@@ -99,33 +95,82 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 		}
 	}
 	
-	
-	
-	
-	/*=====================For GC==================================*/
-	/**
-	 * GC挖开方块时调用这个接口来触发界面变化以及相关逻辑 
-	 * @param x 待挖开的横坐标,从1开始
-	 * @param y 待挖开的纵坐标,从1开始
-	 * @return 挖开方块的值，参照Cell中的设定
-	 */
 	@Override
-	public int diggingForGC(int x, int y) {
-		CellView cv = findCellView(x, y);
-		Cell data = cv.getData();
-		if(data.getVal() == Cell.MINE){
-			//埋回去，什么都不干
+	public void explodeReport() {
+		if(mineIndexList == null || mineIndexList.size() == 0)
+			System.err.println("mineIndexList is null!");
+		for(Integer i : mineIndexList){
+			cvlist.get(i).boom();
 		}
-		else if(data.getVal() == Cell.EMPTY){
-			GameController.getGC().digAround(x, y);
-			cv.setSelected(true);
-		}
-		else if(data.getVal() > 0 && data.getVal() < 9){
-			cv.digChange();
-		}
-		return data.getVal();
+		//TODO:接“游戏结束”弹窗接口
 	}
 	
+	
+	/**
+	 * 玩家点了一个方格后开始自动挖掘周围的空白格,需要确保该方法会在CellView.digChange()后使用
+	 * @param x
+	 * @param y
+	 */
+	@Override
+	public void autoDigAround(int x, int y) {
+		//如果这个方格挖开后是数字，那么它的周围不再挖
+		CellView thiscv = findCellView(x, y);
+		if(thiscv.isNumber())
+			return;
+		
+		List<Integer> surroundList = getSurround(x, y);
+		//挖周围的
+		for(Integer i : surroundList){
+			CellView tempcv = cvlist.get(i);
+			//挖过就不管了
+			if(tempcv.isDug())
+				continue;
+			
+			//不挖的情况：1.雷　　2.旗　　3.数字
+			Cell data = tempcv.getData();
+			if(data.getVal() == Cell.MINE || tempcv.isFlagMarked()){
+				//什么都不干
+			}
+			else{
+//				System.out.println("x:"+data.x+" y:"+data.y+" val="+data.getVal()+" state="+tempcv.getState());
+				tempcv.digChange();
+			}
+		}
+	}
+	
+	
+	/**
+	 * 用来满足鼠标中键的点击和左右双键的点击
+	 * @param centerX 中心方块的横坐标
+	 * @param centerY 中心方块的纵坐标
+	 */
+	@Override
+	public void digAround(int centerX, int centerY) {
+		List<Integer> surroundList = getSurround(centerX, centerY);
+		//挖周围的，能挖的情况：当前格的数字能够与其周围的红旗数匹配
+		if(checkFlagAround(centerX, centerY)){
+			//这种情况下，相当于是玩家自己点
+			for(Integer i : surroundList){
+				CellView cv = cvlist.get(i);
+				if(cv.isMine()){
+					cv.boom();
+					explodeReport();
+					break;
+				}
+				cv.digChange();
+			}
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+
+	/*=====================For GC==================================*/	
+
 	@Override
 	public JPanel ready() {
 		panel = new JPanel();
@@ -134,7 +179,7 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 		
 		for(int i = 1; i <= rowNum; i++){
 			for(int j = 1; j <= colNum; j++){
-				//TODO 录入格子信息,并将格子放到盘面中
+				//录入格子信息,并将格子放到盘面中
 				CellView cv = new CellView(new Cell(i,j));
 				cvlist.add(cv);
 				panel.add(cv);
@@ -184,7 +229,6 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	 */
 	@Override
 	public void putMineAndNumber(int clickedX, int clickedY) {
-		// TODO 还要记录雷放在哪里，mineList
 		int tempX = 0;
 		int tempY = 0;
 		int mineNum = gameInfo.getMineNum();

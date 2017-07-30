@@ -14,14 +14,6 @@ import com.will.view.CellView;
  *
  */
 public interface GCBoardPresenter extends BoardPresenter {
-	/**
-	 * 玩家挖开方块之后，就得让GC来挖周围方块，GC挖开方块时调用这个接口来触发界面变化以及相关逻辑 
-	 * @param x 待挖开的横坐标
-	 * @param y 待挖开的纵坐标
-	 * @return 挖开方块的值，参照Cell中的设定
-	 */
-	int diggingForGC(int x, int y);
-	
 	void setPlayer(Player p);
 	
 	CellView findCellView(int x, int y);

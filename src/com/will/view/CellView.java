@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import com.will.model.Cell;
 import com.will.model.GameInfo;
 import com.will.presenter.CVBoardPresenter;
+import com.will.presenter.GameController;
 import com.will.presenter.Player;
 
 public class CellView extends JButton{
@@ -54,9 +55,10 @@ public class CellView extends JButton{
 			public void mouseReleased(java.awt.event.MouseEvent e) {
 				Player p = Player.getPlayer();
 				bp.firstBloodReport(data.x, data.y);
+				
 				if(isDouble){
-					//TODO 挖9格
-					p.digAround(data.x, data.y);
+					//TODO 左右双键点击挖9格
+					bp.digAround(data.x, data.y);
 					return;
 				}
 				
@@ -65,20 +67,29 @@ public class CellView extends JButton{
 					return;
 				
 				int clicked = e.getButton();
+				//左键
 				if(clicked == java.awt.event.MouseEvent.BUTTON1){
-					if(isMine())
+					//如果被旗标记了就不管
+					if(state == STATE_FLAG)
+						return;
+					if(isMine()){
 						boom();
+						bp.explodeReport();
+					}
 					else{
 						digChange();
 					}
 					
 				}
+				
+				//鼠标中键
 				else if(clicked == java.awt.event.MouseEvent.BUTTON2){
 					//TODO 这里9格已经超出了一个格的控制范围
-					p.digAround(data.x, data.y);
+					bp.digAround(data.x, data.y);
 				}
+				
+				//鼠标右键
 				else if(clicked == java.awt.event.MouseEvent.BUTTON3){
-					System.out.println("gg");
 					if(state == STATE_QUESTION_MARK){
 						markChange(TO_NONE);
 					}
@@ -119,12 +130,14 @@ public class CellView extends JButton{
 	
 
 	public void digChange(){
+		this.setIcon(null);
 		if(data.getVal() > 0 && data.getVal() < 9)
 			this.setText(""+data.getVal());
 		this.setEnabled(false);
 		this.setBackground(Color.LIGHT_GRAY);
 		state = STATE_DUG;
 		data.setDug(true);
+		bp.autoDigAround(data.x, data.y);
 	}
 	
 	private void markChange(int order){
@@ -164,6 +177,31 @@ public class CellView extends JButton{
 		if(data.getVal() == Cell.MINE){
 			return true;
 		}
+		else
+			return false;
+	}
+	
+	public boolean isFlagMarked(){
+		if(state == STATE_FLAG)
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean isDug(){
+		if(state == STATE_DUG)
+			return true;
+		else
+			return false;
+	}
+	
+	public int getState(){
+		return state;
+	}
+	
+	public boolean isNumber(){
+		if(data.getVal() > 0 && data.getVal() < 9)
+			return true;
 		else
 			return false;
 	}
