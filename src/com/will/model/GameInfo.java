@@ -20,6 +20,7 @@ public class GameInfo {
 	private int level;
 	private int boardWidth;
 	private int boardHeight;
+	private int cellNum;	//方格总数
 	private int rowNum;
 	private int colNum;
 	private int mineNum;
@@ -35,7 +36,6 @@ public class GameInfo {
 	 */
 	public static GameInfo createGameInfo(int level){
 		gameInfo = new GameInfo(level);
-		
 		return gameInfo;
 	}
 	
@@ -67,6 +67,7 @@ public class GameInfo {
 			break;
 			
 		}
+		cellNum = rowNum * colNum;
 	}
 
 	public int getLevel() {
@@ -93,4 +94,7 @@ public class GameInfo {
 		return mineNum;
 	}
 	
+	public int getCellNum(){
+		return cellNum;
+	}
 }

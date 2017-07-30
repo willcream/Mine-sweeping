@@ -2,7 +2,7 @@ package com.will.presenter;
 
 import com.will.view.CellView;
 
-public interface CVBoardPresenter extends BoardPresenter{
+public interface CVBoardPresenter extends BoardPresenter{	
 	/**
 	 * 检测四周红旗数与该方格的数字是否相符，相符则开始挖9格
 	 */
@@ -25,6 +25,17 @@ public interface CVBoardPresenter extends BoardPresenter{
 	void explodeReport();
 	
 	
+	/**
+	 * 当方块被旗标记或者取消旗标记时需要用这方法来更新记录
+	 * @param isMarked
+	 */
+	void flagReport(boolean isMarked, boolean isMine);
+	
+	
+	/**
+	 * 挖开一个就记录一个。
+	 */
+	void digReport();
 	
 	/**
 	 * 玩家点了一个方格后开始自动挖掘周围的空白格
@@ -41,5 +52,9 @@ public interface CVBoardPresenter extends BoardPresenter{
 	 * @param centerY 中心方块的纵坐标
 	 */
 	void digAround(int centerX, int centerY);
+	
+	/*需要：记录挖开的数量，记录雷被标记的数量*/
+	void winCheck();
+	
 	
 }

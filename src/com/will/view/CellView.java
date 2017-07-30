@@ -57,7 +57,6 @@ public class CellView extends JButton{
 				bp.firstBloodReport(data.x, data.y);
 				
 				if(isDouble){
-					//TODO 左右双键点击挖9格
 					bp.digAround(data.x, data.y);
 					return;
 				}
@@ -84,7 +83,6 @@ public class CellView extends JButton{
 				
 				//鼠标中键
 				else if(clicked == java.awt.event.MouseEvent.BUTTON2){
-					//TODO 这里9格已经超出了一个格的控制范围
 					bp.digAround(data.x, data.y);
 				}
 				
@@ -114,13 +112,19 @@ public class CellView extends JButton{
 	
 	@Override
 	public boolean equals(Object obj) {
-		int ox = ((CellView)obj).getData().x;
-		int oy = ((CellView)obj).getData().y;
-		if(data.x == ox && data.y == oy){
+		try{
+			int ox = ((CellView)obj).getData().x;
+			int oy = ((CellView)obj).getData().y;
+			if(data.x == ox && data.y == oy){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}catch(Exception e){
+			//目前遇到的问题是弹窗会调用到这个函数，但对于整体功能并不影响，为了控制台输出
+			//信息好看，这里直接屏蔽掉。
 			return true;
-		}
-		else{
-			return false;
 		}
 	}
 	
@@ -137,7 +141,11 @@ public class CellView extends JButton{
 		this.setBackground(Color.LIGHT_GRAY);
 		state = STATE_DUG;
 		data.setDug(true);
+		
+		bp.digReport();
 		bp.autoDigAround(data.x, data.y);
+		
+		bp.winCheck();
 	}
 	
 	private void markChange(int order){
@@ -150,11 +158,13 @@ public class CellView extends JButton{
 		case TO_FLAG:
 			this.setIcon(new ImageIcon("flag.png"));
 			state = STATE_FLAG;
+			bp.flagReport(true, isMine());
 			break;
 			
 		case TO_QUESTION_MARK:
 			this.setIcon(new ImageIcon("question-mark.png"));
 			state = STATE_QUESTION_MARK;
+			bp.flagReport(false, isMine());
 			break;
 			
 		default:

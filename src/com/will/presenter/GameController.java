@@ -28,7 +28,6 @@ public class GameController extends User{
 
 	@Override
 	public boolean dig(int x, int y) {
-		//TODO 挖开方法待完善
 		return false;
 		
 		
@@ -36,7 +35,6 @@ public class GameController extends User{
 
 	@Override
 	public void afterDug(int x, int y) {
-		// TODO 挖开后的界面变化
 		digAround(x, y);
 	}
 	
@@ -51,8 +49,8 @@ public class GameController extends User{
 		bp.putMineAndNumber(clickedX, clickedY);
 	}
 	
-	public void gameRestart(){
-		
-	}
+//	public void gameRestart(){
+//		
+//	}
 	
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.will.model.Cell;
@@ -13,7 +14,6 @@ import com.will.presenter.CVBoardPresenter;
 import com.will.presenter.GCBoardPresenter;
 import com.will.presenter.GameController;
 import com.will.presenter.Player;
-//TODO 不知为什么，cvlist为空
 public class Board implements CVBoardPresenter,GCBoardPresenter{
 	//这里的w和h都是尺寸，不是格子数
 	private int w;
@@ -21,6 +21,9 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	private int rowNum;
 	private int colNum;
 	private GameInfo gameInfo;
+	
+	private int mineMarkNum;
+	private int dugNum;
 	
 	private Player player;
 	private ArrayList<CellView> cvlist;
@@ -51,6 +54,8 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	public void initialize(){
 		cvlist = new ArrayList<>();
 		mineIndexList = new ArrayList<>();
+		dugNum = 0;
+		mineMarkNum = 0;
 	}
 
 	public JPanel getPanel(){
@@ -68,12 +73,21 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 		return h;
 	}
 	
+
+	private void gameover(){
+		int res= JOptionPane.showConfirmDialog(panel, "游戏结束，是否重来？", "是否继续", JOptionPane.YES_NO_OPTION);
+		//TODO 重来 和 退出
+	}
+	
+	private void complete(){
+		//TODO 游戏通关窗口
+	}
+	
 	
 	/*=====================For CellView============================*/
 	@Override
 	public boolean checkFlagAround(int x, int y) {
 		ArrayList<Integer> surrondIndex = (ArrayList<Integer>) getSurround(x, y);
-		//TODO 判断:当四周的红旗数=该方格的数字时，开始挖周围9格
 		int val = findCellView(x, y).getData().getVal();
 		int flagCounter = 0;
 		for(Integer i : surrondIndex){
@@ -102,10 +116,38 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 		for(Integer i : mineIndexList){
 			cvlist.get(i).boom();
 		}
-		//TODO:接“游戏结束”弹窗接口
+		gameover();
 	}
 	
 	
+	/**
+	 * 当方块被旗标记或者取消旗标记时需要用这方法来更新记录
+	 * @param isMarked
+	 */
+	@Override
+	public void flagReport(boolean isMarked, boolean isMine) {
+		if(isMarked){
+			if(isMine)
+				mineMarkNum++;
+		}
+		//取消旗标识
+		else{
+			if(isMine)
+				mineMarkNum--;
+		}
+		
+	}
+	
+
+	/**
+	 * 挖开一个就记录一个。
+	 */
+	@Override
+	public void digReport() {
+		dugNum++;
+	}
+	
+
 	/**
 	 * 玩家点了一个方格后开始自动挖掘周围的空白格,需要确保该方法会在CellView.digChange()后使用
 	 * @param x
@@ -160,6 +202,19 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 				cv.digChange();
 			}
 		}
+	}
+	
+	
+	/**
+	 * 每次点击之后都查看一下，看有没有达成赢的条件。
+	 */
+	@Override
+	public void winCheck() {
+//		System.out.println("mineMarkNum="+mineMarkNum+" dugNum="+dugNum+" Amount="+gameInfo.getCellNum());
+		if(mineMarkNum + dugNum == gameInfo.getCellNum())
+			complete();
+		else
+			return;
 	}
 	
 	
@@ -316,5 +371,6 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 		}
 		return aroundIndexList;
 	}
+
 
 }

@@ -1,16 +1,11 @@
 package com.will.view;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.util.ArrayList;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.will.model.Cell;
 import com.will.model.GameInfo;
 import com.will.presenter.GameController;
 import com.will.presenter.Player;
@@ -37,6 +32,7 @@ public class Main {
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		mainWindow.setVisible(true);
+		
 		
 	}
 
