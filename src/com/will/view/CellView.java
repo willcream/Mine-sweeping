@@ -53,10 +53,9 @@ public class CellView extends JButton{
 
 			@Override
 			public void mouseReleased(java.awt.event.MouseEvent e) {
-				Player p = Player.getPlayer();
-				bp.firstBloodReport(data.x, data.y);
-				
 				if(isDouble){
+					if(state != STATE_DUG)
+						return;
 					bp.digAround(data.x, data.y);
 					return;
 				}
@@ -66,14 +65,20 @@ public class CellView extends JButton{
 					return;
 				
 				int clicked = e.getButton();
-				//左键
 				if(clicked == java.awt.event.MouseEvent.BUTTON1){
+					System.out.println("左键");
+					
+					//要第一次点下去才算
+					if(data.getVal() != Cell.MINE && state != STATE_FLAG)
+						bp.firstBloodReport(data.x, data.y);
 					dig();
 					
 				}
 				
 				//鼠标中键
 				else if(clicked == java.awt.event.MouseEvent.BUTTON2){
+					if(state != STATE_DUG)
+						return;
 					bp.digAround(data.x, data.y);
 				}
 				
@@ -137,6 +142,8 @@ public class CellView extends JButton{
 	}
 
 	public void digChange(){
+		if(state == STATE_DUG)
+			return;
 		this.setIcon(null);
 		if(data.getVal() > 0 && data.getVal() < 9)
 			this.setText(""+data.getVal());
@@ -161,12 +168,15 @@ public class CellView extends JButton{
 		case TO_FLAG:
 			this.setIcon(new ImageIcon("flag.png"));
 			state = STATE_FLAG;
+			Main.subFlagTag();
 			bp.flagReport(true, isMine());
+			bp.winCheck();
 			break;
 			
 		case TO_QUESTION_MARK:
 			this.setIcon(new ImageIcon("question-mark.png"));
 			state = STATE_QUESTION_MARK;
+			Main.addFlagTag();
 			bp.flagReport(false, isMine());
 			break;
 			
@@ -176,9 +186,9 @@ public class CellView extends JButton{
 	}
 	
 	public void boom(){
-		this.setEnabled(false);
 		this.setDisabledIcon(new ImageIcon("boom.png"));
 		this.setIcon(new ImageIcon("boom.png"));
+		this.setEnabled(false);
 		state = STATE_EXPLODE;
 	}
 	
@@ -217,5 +227,15 @@ public class CellView extends JButton{
 			return true;
 		else
 			return false;
+	}
+	
+	public void reset() {
+		data.setVal(Cell.EMPTY);
+		state = STATE_NONE;
+		this.setText("");
+		this.setDisabledIcon(null);
+		this.setIcon(null);
+		this.setEnabled(true);
+		this.setBackground(null);
 	}
 }

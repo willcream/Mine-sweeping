@@ -70,6 +70,13 @@ public class Cell{
 	public void setVal(int val) {
 		this.val = val;
 	}
+
+	@Override
+	public String toString() {
+		String s = "("+x+","+y+") val="+val;
+		return s;
+	}
+	
 	
 	
 	

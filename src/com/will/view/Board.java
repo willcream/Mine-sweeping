@@ -75,12 +75,47 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	
 
 	private void gameover(){
-		int res= JOptionPane.showConfirmDialog(panel, "游戏结束，是否重来？", "是否继续", JOptionPane.YES_NO_OPTION);
-		//TODO 重来 和 退出
+		if(GameController.getGC().isOver())
+			return;
+		try {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					int res= JOptionPane.showConfirmDialog(panel, "游戏结束，是否重来？", "是否继续", JOptionPane.YES_NO_OPTION);
+					if(res == JOptionPane.NO_OPTION || res == JOptionPane.CLOSED_OPTION)
+						System.exit(0);
+					else if(res == JOptionPane.YES_OPTION){
+						//重新开始
+						restart();
+					}
+					
+				}
+			}).start();
+			GameController.getGC().setOver(true);
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	private void complete(){
 		//TODO 游戏通关窗口
+		try {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					int res= JOptionPane.showConfirmDialog(panel, "恭喜你，通关了！", "是否再来？", JOptionPane.YES_NO_OPTION);
+					if(res == JOptionPane.NO_OPTION || res == JOptionPane.CLOSED_OPTION)
+						System.exit(0);
+					else if(res == JOptionPane.YES_OPTION){
+						//重新开始
+						restart();
+					}
+				}
+			}).start();
+			GameController.getGC().setOver(false);
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	
@@ -94,8 +129,7 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 			if(cvlist.get(i).isFlagMarked())
 				flagCounter++;
 		}
-		System.out.println("flag number:"+flagCounter);
-		if(val == flagCounter)
+		if(val == flagCounter || (flagCounter == 0 ))
 			return true;
 		else
 			return false;
@@ -113,6 +147,7 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	public void explodeReport() {
 		if(mineIndexList == null || mineIndexList.size() == 0)
 			System.err.println("mineIndexList is null!");
+		System.out.println(mineIndexList.size());
 		for(Integer i : mineIndexList){
 			cvlist.get(i).boom();
 		}
@@ -168,12 +203,12 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 			if(tempcv.isDug())
 				continue;
 			
-			//不挖的情况：1.雷　　2.旗　　3.数字
+			//不挖的情况：1.雷　　2.旗　　3.数字　　4.已挖掘
 			Cell data = tempcv.getData();
-			if(data.getVal() == Cell.MINE || tempcv.isFlagMarked()){
+			if(data.getVal() == Cell.MINE || tempcv.isFlagMarked() || tempcv.isDug()){
 				//什么都不干
 			}
-			else{
+			else if(!tempcv.isDug()){
 //				System.out.println("x:"+data.x+" y:"+data.y+" val="+data.getVal()+" state="+tempcv.getState());
 				tempcv.digChange();
 			}
@@ -194,13 +229,18 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 			//这种情况下，相当于是玩家自己点，但不应该继续递归下去。
 			for(Integer i : surroundList){
 				CellView cv = cvlist.get(i);
-				if(cv.isMine()){
+				if(cv.isMine() && !cv.isFlagMarked()){
 					cv.boom();
 					explodeReport();
 					break;
 				}
-				cv.dig();
+				else {
+					cv.dig();
+				}
 			}
+		}
+		else {
+			System.out.println("red flag");
 		}
 	}
 	
@@ -369,8 +409,32 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 		if(aroundIndexList.size() > 8){
 			System.err.println("Board---找周围格时出事了");
 		}
+		
 		return aroundIndexList;
 	}
 
+	
+	/**
+	 * 需要做：重置所有方格，firstBlood重置
+	 */
+	@Override
+	public void restart() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				System.out.println("restart……");
+				for(CellView cv : cvlist) {
+					cv.reset();
+				}
+				firstBlood = true;
+				GameController.getGC().setOver(false);
+				mineIndexList = new ArrayList<>();
+				aroundIndexList = new ArrayList<>();
+				Main.resetFlagTag();
+			}
+		}).start();
+		
+	}
 
+	
 }

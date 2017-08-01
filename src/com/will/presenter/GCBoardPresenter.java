@@ -34,4 +34,9 @@ public interface GCBoardPresenter extends BoardPresenter {
 	 */
 	void putMineAndNumber(int clickedX, int clickedY);
 	
+	
+	/**
+	 * 需要做：重置所有方格，firstBlood重置
+	 */
+	void restart();
 }
