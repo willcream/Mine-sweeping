@@ -75,13 +75,14 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	
 
 	private void gameover(){
+		System.out.println("isOver = "+GameController.getGC().isOver());
 		if(GameController.getGC().isOver())
 			return;
 		try {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					int res= JOptionPane.showConfirmDialog(panel, "游戏结束，是否重来？", "是否继续", JOptionPane.YES_NO_OPTION);
+					int res= JOptionPane.showConfirmDialog(panel, "游戏结束，是否重来？", "", JOptionPane.YES_NO_OPTION);
 					if(res == JOptionPane.NO_OPTION || res == JOptionPane.CLOSED_OPTION)
 						System.exit(0);
 					else if(res == JOptionPane.YES_OPTION){
@@ -103,7 +104,9 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					int res= JOptionPane.showConfirmDialog(panel, "恭喜你，通关了！", "是否再来？", JOptionPane.YES_NO_OPTION);
+					if(GameController.getGC().isOver())
+						return;
+					int res= JOptionPane.showConfirmDialog(panel, "恭喜你，通关了！是否再来？", "", JOptionPane.YES_NO_OPTION);
 					if(res == JOptionPane.NO_OPTION || res == JOptionPane.CLOSED_OPTION)
 						System.exit(0);
 					else if(res == JOptionPane.YES_OPTION){
@@ -112,7 +115,7 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 					}
 				}
 			}).start();
-			GameController.getGC().setOver(false);
+			GameController.getGC().setOver(true);
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -147,7 +150,6 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	public void explodeReport() {
 		if(mineIndexList == null || mineIndexList.size() == 0)
 			System.err.println("mineIndexList is null!");
-		System.out.println(mineIndexList.size());
 		for(Integer i : mineIndexList){
 			cvlist.get(i).boom();
 		}
@@ -425,6 +427,7 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 				System.out.println("restart……");
 				for(CellView cv : cvlist) {
 					cv.reset();
+					cv.doLayout();
 				}
 				firstBlood = true;
 				GameController.getGC().setOver(false);

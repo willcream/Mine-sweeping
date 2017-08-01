@@ -9,7 +9,8 @@ public class GameController extends User{
 	public final String name = "GC";
 	private static GameController gc;
 	
-	private boolean isOver;
+	private boolean isOver = false;
+	private boolean isComplete = false;
 	
 	private GCBoardPresenter bp;
 	
@@ -65,5 +66,14 @@ public class GameController extends User{
 		
 	}
 
+	public boolean isComplete() {
+		return isComplete;
+	}
+
+	public void setComplete(boolean isComplete) {
+		this.isComplete = isComplete;
+	}
+
+	
 	
 }
