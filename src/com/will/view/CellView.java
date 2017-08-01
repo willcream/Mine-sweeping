@@ -68,16 +68,7 @@ public class CellView extends JButton{
 				int clicked = e.getButton();
 				//左键
 				if(clicked == java.awt.event.MouseEvent.BUTTON1){
-					//如果被旗标记了就不管
-					if(state == STATE_FLAG)
-						return;
-					if(isMine()){
-						boom();
-						bp.explodeReport();
-					}
-					else{
-						digChange();
-					}
+					dig();
 					
 				}
 				
@@ -132,6 +123,18 @@ public class CellView extends JButton{
 		return data;
 	}
 	
+	public void dig() {
+		//如果被旗标记了就不管
+		if(state == STATE_FLAG)
+			return;
+		if(isMine()){
+			boom();
+			bp.explodeReport();
+		}
+		else{
+			digChange();
+		}
+	}
 
 	public void digChange(){
 		this.setIcon(null);
