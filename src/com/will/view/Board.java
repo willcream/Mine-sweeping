@@ -191,7 +191,7 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 		List<Integer> surroundList = getSurround(centerX, centerY);
 		//挖周围的，能挖的情况：当前格的数字能够与其周围的红旗数匹配
 		if(checkFlagAround(centerX, centerY)){
-			//这种情况下，相当于是玩家自己点
+			//这种情况下，相当于是玩家自己点，但不应该继续递归下去。
 			for(Integer i : surroundList){
 				CellView cv = cvlist.get(i);
 				if(cv.isMine()){
@@ -199,7 +199,7 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 					explodeReport();
 					break;
 				}
-				cv.digChange();
+				cv.dig();
 			}
 		}
 	}
