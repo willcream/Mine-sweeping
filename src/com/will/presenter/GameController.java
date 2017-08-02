@@ -43,10 +43,9 @@ public class GameController extends User{
 		digAround(x, y);
 	}
 	
-	public JPanel gamePreStart(Player p){
+	public JPanel gamePreStart(){
 		bp = Board.getBoard();
 		JPanel cellPanel = bp.ready();
-		bp.setPlayer(p);
 		return cellPanel;
 	}
 	
@@ -62,8 +61,8 @@ public class GameController extends User{
 		this.isOver = isOver;
 	}
 	
-	public void restart(JPanel cellPanel) {
-		
+	public void restart() {
+		bp.changeLevel();		
 	}
 
 	public boolean isComplete() {

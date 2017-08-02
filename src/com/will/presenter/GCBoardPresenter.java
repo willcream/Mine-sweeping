@@ -14,7 +14,6 @@ import com.will.view.CellView;
  *
  */
 public interface GCBoardPresenter extends BoardPresenter {
-	void setPlayer(Player p);
 	
 	CellView findCellView(int x, int y);
 	
@@ -39,4 +38,6 @@ public interface GCBoardPresenter extends BoardPresenter {
 	 * 需要做：重置所有方格，firstBlood重置
 	 */
 	void restart();
+	
+	void changeLevel();
 }

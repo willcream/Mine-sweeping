@@ -43,15 +43,17 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	}
 	
 	private Board(){
+		initializeData();
+		panel = new JPanel();
+	}
+	
+	public void initializeData(){
 		gameInfo = GameInfo.getGameInfo();
 		w = gameInfo.getBoardWidth();
 		h = gameInfo.getBoardHeight();
 		rowNum = gameInfo.getRowNum();
 		colNum = gameInfo.getColNum();
-		initialize();
-	}
-	
-	public void initialize(){
+		
 		cvlist = new ArrayList<>();
 		mineIndexList = new ArrayList<>();
 		dugNum = 0;
@@ -75,30 +77,30 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	
 
 	private void gameover(){
-		System.out.println("isOver = "+GameController.getGC().isOver());
 		if(GameController.getGC().isOver())
 			return;
-		
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				int res= JOptionPane.showConfirmDialog(panel, "游戏结束，是否重来？", "", JOptionPane.YES_NO_OPTION);
-				if(res == JOptionPane.NO_OPTION || res == JOptionPane.CLOSED_OPTION)
-					System.exit(0);
-				else if(res == JOptionPane.YES_OPTION){
-					//重新开始
-					restart();
-				}
-			}
-		}).start();
+		else
+			GameController.getGC().setOver(true);
 		
 		
-//		GameController.getGC().setOver(true);
+		int res= JOptionPane.showConfirmDialog(panel, "游戏结束，是否重来？", "", JOptionPane.YES_NO_OPTION);
+		if(res == JOptionPane.NO_OPTION || res == JOptionPane.CLOSED_OPTION)
+			System.exit(0);
+		else if(res == JOptionPane.YES_OPTION){
+			//重新开始
+			restart();
+			GameController.getGC().setOver(false);
+		}
+		
 		
 	}
 	
 	private void complete(){
-		//TODO 游戏通关窗口
+		if(GameController.getGC().isOver())
+			return;
+		else
+			GameController.getGC().setOver(true);
+		
 		try {
 			new Thread(new Runnable() {
 				@Override
@@ -111,10 +113,11 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 					else if(res == JOptionPane.YES_OPTION){
 						//重新开始
 						restart();
+						GameController.getGC().setOver(false);
 					}
 				}
 			}).start();
-//			GameController.getGC().setOver(true);
+			
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -254,7 +257,6 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 			}
 		}
 		else {
-			System.out.println("red flag");
 		}
 	}
 	
@@ -264,7 +266,6 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	 */
 	@Override
 	public void winCheck() {
-//		System.out.println("mineMarkNum="+mineMarkNum+" dugNum="+dugNum+" Amount="+gameInfo.getCellNum());
 		if(mineMarkNum + dugNum == gameInfo.getCellNum())
 			complete();
 		else
@@ -282,7 +283,8 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 
 	@Override
 	public JPanel ready() {
-		panel = new JPanel();
+		rowNum = gameInfo.getRowNum();
+		colNum = gameInfo.getColNum();
 		GridLayout gl = new GridLayout(rowNum,colNum,2,2);
 		panel.setLayout(gl);
 		
@@ -297,10 +299,6 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 		return panel;
 	}
 
-	@Override
-	public void setPlayer(Player p) {
-		this.player = p;
-	}
 	
 	/**
 	 * 通过输入坐标来直接获得CellView
@@ -433,25 +431,33 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	 */
 	@Override
 	public void restart() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-			}
-		}).start();
-		
-		
 		System.out.println("restart……");
 		for(CellView cv : cvlist) {
-			cv.reset();
-			cv.doLayout();
+			cv.resetData();
+			cv.resetView();
 		}
+		
 		firstBlood = true;
 		GameController.getGC().setOver(false);
 		mineIndexList = new ArrayList<>();
 		aroundIndexList = new ArrayList<>();
 		dugNum = 0;
-		Main.resetFlagTag();
+		MainWindow.getMainWindow().resetFlagTag();
+		
 	}
 
+	@Override
+	public void changeLevel() {
+		panel.removeAll();
+		ready();
+		firstBlood = true;
+		GameController.getGC().setOver(false);
+		mineIndexList = new ArrayList<>();
+		aroundIndexList = new ArrayList<>();
+		dugNum = 0;
+		MainWindow.getMainWindow().resetFlagTag();
+	}
 	
+	
+
 }

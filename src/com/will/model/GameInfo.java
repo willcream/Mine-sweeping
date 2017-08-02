@@ -1,6 +1,7 @@
 package com.will.model;
 
 import com.will.presenter.Player;
+import com.will.view.CellView;
 
 public class GameInfo {
 	public static final int LEVEL_LOW = 0;
@@ -9,11 +10,19 @@ public class GameInfo {
 	
 	//不同难度下的盘面规格
 	//低级：9*9（ 10雷）    中级：16*16（40雷）    高级：16*30（99）雷
-	private final int LOW_BOARD_WIDTH = 250;
-	private final int LOW_BOARD_HEIGHT = 250;
 	private final int LOW_ROW_NUM = 9;
 	private final int LOW_COL_NUM = 9;
 	private final int LOW_MINE_NUM = 10;
+	
+	private final int NORMAL_ROW_NUM = 16;       
+	private final int NORMAL_COL_NUM = 16;       
+	private final int NORMAL_MINE_NUM = 300;     
+	
+	private final int HIGH_ROW_NUM = 16;       
+	private final int HIGH_COL_NUM = 30;       
+	private final int HIGH_MINE_NUM = 99;     
+	
+	
 	
 	private static GameInfo gameInfo;
 	
@@ -25,10 +34,9 @@ public class GameInfo {
 	private int colNum;
 	private int mineNum;
 	
-	private GameInfo(int level){
-		this.level = level;
-		produceBoardInfo();
-	}
+	private int windowHeight;
+	private int windowWidth;
+	
 	
 	/**
 	 * 在Main.java中使用，初始化游戏信息。
@@ -50,25 +58,53 @@ public class GameInfo {
 		return gameInfo;
 	}
 	
+	
+	private GameInfo(int level){
+		this.level = level;
+		produceBoardInfo();
+	}
+	
 	private void produceBoardInfo(){
 		switch(level){
 		case LEVEL_LOW:
-			boardWidth = LOW_BOARD_WIDTH;
-			boardHeight = LOW_BOARD_HEIGHT;
 			rowNum = LOW_ROW_NUM;
 			colNum = LOW_COL_NUM;
 			mineNum = LOW_MINE_NUM;
 			break;
 			
 		case LEVEL_NORMAL:
+			rowNum = NORMAL_ROW_NUM;
+			colNum = NORMAL_COL_NUM;
+			mineNum = NORMAL_MINE_NUM;
 			break;
 			
 		case LEVEL_HIGH:
+			rowNum = HIGH_ROW_NUM;
+			colNum = HIGH_COL_NUM;
+			mineNum = HIGH_MINE_NUM;
 			break;
 			
 		}
+		boardWidth = calBoardWidth(colNum);
+		boardHeight = calBoardHeight(rowNum);
+		windowHeight = boardHeight + 40;
+		windowWidth = boardWidth;
 		cellNum = rowNum * colNum;
 	}
+	
+	public void reset(int level){
+		this.level = level;
+		produceBoardInfo();
+	}
+	
+	private int calBoardWidth(int numInCol){
+		return numInCol * CellView.CELL_WIDTH;
+	}
+	
+	private int calBoardHeight(int numInRow){
+		return numInRow * CellView.CELL_WIDTH;
+	}
+	
 
 	public int getLevel() {
 		return level;
@@ -97,4 +133,15 @@ public class GameInfo {
 	public int getCellNum(){
 		return cellNum;
 	}
+
+	public int getWindowHeight() {
+		return windowHeight;
+	}
+
+	public int getWindowWidth() {
+		return windowWidth;
+	}
+
+	
+	
 }

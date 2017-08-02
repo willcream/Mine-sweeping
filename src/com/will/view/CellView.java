@@ -18,26 +18,26 @@ public class CellView extends JButton{
 	private Cell data;
 	private int state;
 	private CVBoardPresenter bp;
-	
+
 	private final static int STATE_NONE = 0;
 	private final static int STATE_FLAG = 1;
 	private final static int STATE_QUESTION_MARK = 2;
 	private final static int STATE_DUG = 3;
 	private final static int STATE_EXPLODE = 4;
-	
+
 	private final static int TO_NONE = 10;
 	private final static int TO_FLAG = 11;
 	private final static int TO_QUESTION_MARK = 12;
-	
-	public final static int CELL_WIDTH = 25;
-	
+
+	public final static int CELL_WIDTH = 30;
+
 	public CellView(Cell cell) {
 		data = cell;
 		state = STATE_NONE;
 		bp = Board.getBoard();
 		initializeView();
 		int counter = 0;
-		
+
 	}
 
 	private void initializeView(){
@@ -46,7 +46,7 @@ public class CellView extends JButton{
 		this.setSize(25, 25);
 		this.addMouseListener(new MouseAdapter() {
 			boolean isDouble = true;
-			
+
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent e) {
 			}
@@ -59,29 +59,36 @@ public class CellView extends JButton{
 					bp.digAround(data.x, data.y);
 					return;
 				}
-				
-				//挖开了就不管了。
-				if(state == STATE_DUG || state == STATE_EXPLODE)
-					return;
+
 				
 				int clicked = e.getButton();
+				//挖开了,如果是中键就要判断，其他跳过。
+				if(state == STATE_DUG ){
+					if(clicked == java.awt.event.MouseEvent.BUTTON2){
+						bp.digAround(data.x, data.y);
+					}
+					else
+						return;
+				}
+				if(state == STATE_EXPLODE)
+					return;
+
+				
 				if(clicked == java.awt.event.MouseEvent.BUTTON1){
-					System.out.println("左键");
-					
 					//要第一次点下去才算
 					if(data.getVal() != Cell.MINE && state != STATE_FLAG)
 						bp.firstBloodReport(data.x, data.y);
 					dig();
-					
+
 				}
-				
+
 				//鼠标中键
 				else if(clicked == java.awt.event.MouseEvent.BUTTON2){
 					if(state != STATE_DUG)
 						return;
 					bp.digAround(data.x, data.y);
 				}
-				
+
 				//鼠标右键
 				else if(clicked == java.awt.event.MouseEvent.BUTTON3){
 					if(state == STATE_QUESTION_MARK){
@@ -101,11 +108,11 @@ public class CellView extends JButton{
 				if(isDouble)
 					System.out.println("左右键一起按");
 			}
-			
-			
+
+
 		});
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		try{
@@ -123,11 +130,11 @@ public class CellView extends JButton{
 			return true;
 		}
 	}
-	
+
 	public Cell getData(){
 		return data;
 	}
-	
+
 	public void dig() {
 		//如果被旗标记了就不管
 		if(state == STATE_FLAG)
@@ -142,6 +149,7 @@ public class CellView extends JButton{
 	}
 
 	public void digChange(){
+		System.out.println("点击坐标："+data.x+","+data.y+" 状态:"+state);
 		if(state == STATE_DUG)
 			return;
 		this.setIcon(null);
@@ -151,53 +159,51 @@ public class CellView extends JButton{
 		this.setBackground(Color.LIGHT_GRAY);
 		state = STATE_DUG;
 		data.setDug(true);
-		
+
 		bp.digReport();
 		bp.autoDigAround(data.x, data.y);
-		
+
 		bp.winCheck();
 	}
-	
+
 	private void markChange(int order){
 		switch(order){
 		case TO_NONE:
 			this.setIcon(null);
 			state = STATE_NONE;
 			break;
-			
+
 		case TO_FLAG:
 			this.setIcon(new ImageIcon("flag.png"));
-			this.repaint();
 			state = STATE_FLAG;
-			Main.subFlagTag();
+			MainWindow.getMainWindow().subFlagTag();
 			bp.flagReport(true, isMine());
 			bp.winCheck();
 			break;
-			
+
 		case TO_QUESTION_MARK:
 			this.setIcon(new ImageIcon("question-mark.png"));
 			state = STATE_QUESTION_MARK;
-			Main.addFlagTag();
+			MainWindow.getMainWindow().addFlagTag();
 			bp.flagReport(false, isMine());
 			break;
-			
+
 		default:
 			break;			
 		}
 	}
-	
+
 	public void boom(){
 		this.setDisabledIcon(new ImageIcon("boom.png"));
 		this.setIcon(new ImageIcon("boom.png"));
 		this.setEnabled(false);
-		this.repaint();
 		state = STATE_EXPLODE;
 	}
-	
+
 	public void setDataVal(int val){
 		data.setVal(val);
 	}
-	
+
 	public boolean isMine(){
 		if(data.getVal() == Cell.MINE){
 			return true;
@@ -205,40 +211,42 @@ public class CellView extends JButton{
 		else
 			return false;
 	}
-	
+
 	public boolean isFlagMarked(){
 		if(state == STATE_FLAG)
 			return true;
 		else
 			return false;
 	}
-	
+
 	public boolean isDug(){
 		if(state == STATE_DUG)
 			return true;
 		else
 			return false;
 	}
-	
+
 	public int getState(){
 		return state;
 	}
-	
+
 	public boolean isNumber(){
 		if(data.getVal() > 0 && data.getVal() < 9)
 			return true;
 		else
 			return false;
 	}
-	
-	public void reset() {
+
+	public void resetData() {
 		data.setVal(Cell.EMPTY);
 		state = STATE_NONE;
+	}
+	
+	public void resetView(){
 		this.setText("");
 		this.setDisabledIcon(null);
 		this.setIcon(null);
 		this.setEnabled(true);
 		this.setBackground(null);
-		this.repaint();
 	}
 }
