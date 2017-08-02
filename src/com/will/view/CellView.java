@@ -167,6 +167,7 @@ public class CellView extends JButton{
 			
 		case TO_FLAG:
 			this.setIcon(new ImageIcon("flag.png"));
+			this.repaint();
 			state = STATE_FLAG;
 			Main.subFlagTag();
 			bp.flagReport(true, isMine());
@@ -189,6 +190,7 @@ public class CellView extends JButton{
 		this.setDisabledIcon(new ImageIcon("boom.png"));
 		this.setIcon(new ImageIcon("boom.png"));
 		this.setEnabled(false);
+		this.repaint();
 		state = STATE_EXPLODE;
 	}
 	
@@ -237,5 +239,6 @@ public class CellView extends JButton{
 		this.setIcon(null);
 		this.setEnabled(true);
 		this.setBackground(null);
+		this.repaint();
 	}
 }

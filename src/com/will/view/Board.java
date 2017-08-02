@@ -78,24 +78,23 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 		System.out.println("isOver = "+GameController.getGC().isOver());
 		if(GameController.getGC().isOver())
 			return;
-		try {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					int res= JOptionPane.showConfirmDialog(panel, "游戏结束，是否重来？", "", JOptionPane.YES_NO_OPTION);
-					if(res == JOptionPane.NO_OPTION || res == JOptionPane.CLOSED_OPTION)
-						System.exit(0);
-					else if(res == JOptionPane.YES_OPTION){
-						//重新开始
-						restart();
-					}
-					
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				int res= JOptionPane.showConfirmDialog(panel, "游戏结束，是否重来？", "", JOptionPane.YES_NO_OPTION);
+				if(res == JOptionPane.NO_OPTION || res == JOptionPane.CLOSED_OPTION)
+					System.exit(0);
+				else if(res == JOptionPane.YES_OPTION){
+					//重新开始
+					restart();
 				}
-			}).start();
-			GameController.getGC().setOver(true);
-		}catch(Exception e) {
-			System.out.println(e.getMessage());
-		}
+			}
+		}).start();
+		
+		
+//		GameController.getGC().setOver(true);
+		
 	}
 	
 	private void complete(){
@@ -115,7 +114,7 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 					}
 				}
 			}).start();
-			GameController.getGC().setOver(true);
+//			GameController.getGC().setOver(true);
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -141,6 +140,7 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	@Override
 	public void firstBloodReport(int clickedX, int clickedY) {
 		if(firstBlood){
+			System.out.println("firstBlood");
 			putMineAndNumber(clickedX, clickedY);
 			firstBlood = false;
 		}
@@ -150,9 +150,21 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	public void explodeReport() {
 		if(mineIndexList == null || mineIndexList.size() == 0)
 			System.err.println("mineIndexList is null!");
-		for(Integer i : mineIndexList){
-			cvlist.get(i).boom();
+		
+		try {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					for(Integer i : mineIndexList){
+						cvlist.get(i).boom();
+					}
+				}
+			}).start();
+			
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
 		}
+		
 		gameover();
 	}
 	
@@ -424,19 +436,21 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				System.out.println("restart……");
-				for(CellView cv : cvlist) {
-					cv.reset();
-					cv.doLayout();
-				}
-				firstBlood = true;
-				GameController.getGC().setOver(false);
-				mineIndexList = new ArrayList<>();
-				aroundIndexList = new ArrayList<>();
-				Main.resetFlagTag();
 			}
 		}).start();
 		
+		
+		System.out.println("restart……");
+		for(CellView cv : cvlist) {
+			cv.reset();
+			cv.doLayout();
+		}
+		firstBlood = true;
+		GameController.getGC().setOver(false);
+		mineIndexList = new ArrayList<>();
+		aroundIndexList = new ArrayList<>();
+		dugNum = 0;
+		Main.resetFlagTag();
 	}
 
 	
