@@ -22,15 +22,10 @@ public class MainWindow extends JFrame {
 	private GameController gc;
 	private GameInfo info;
 	
+	private JPanel cellPanel;
 	private JMenuBar jmb;
 	private JLabel label;
 	
-
-	public static MainWindow getMainWindow(){
-		if(mainWindow == null)
-			mainWindow = new MainWindow();
-		return mainWindow;
-	}
 
 	private MainWindow(){
 		dataInitialize();
@@ -39,12 +34,31 @@ public class MainWindow extends JFrame {
 		this.setVisible(true);
 	}
 
+	
+	public  MainWindow(GameInfo info, GameController gc){
+		//GameInfo一定要最先初始化
+		this.info = info;
+		this.gc = gc;
+		flagNum = info.getMineNum();
+		
+		viewInitialize();
+		this.setVisible(true);
+	}
+	
+	public static MainWindow createMainWindow(GameInfo info, GameController gc){
+		mainWindow = new MainWindow(info, gc);
+		return mainWindow;
+	}
+	
+	public static MainWindow getMainWindow(){
+		if(mainWindow == null)
+			mainWindow = new MainWindow();
+		return mainWindow;
+	}
+	
 
 	private void dataInitialize(){
-		//GameInfo一定要最先初始化
-		info = GameInfo.createGameInfo(gameLevel);
-		gc = GameController.getGC();
-		flagNum = GameInfo.getGameInfo().getMineNum();
+		
 	}
 
 	private void viewInitialize(){
@@ -53,7 +67,7 @@ public class MainWindow extends JFrame {
 		this.setLayout(new BorderLayout());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JPanel cellPanel = gc.gamePreStart();
+		cellPanel = gc.gamePreStart();
 		this.add(cellPanel,BorderLayout.CENTER);
 
 		label = new JLabel("  剩余红旗数："+flagNum);
@@ -141,4 +155,5 @@ public class MainWindow extends JFrame {
 		flagNum = GameInfo.getGameInfo().getMineNum();
 		label.setText("    剩余红旗数："+flagNum);
 	}
+	
 }

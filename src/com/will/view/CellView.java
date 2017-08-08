@@ -53,6 +53,7 @@ public class CellView extends JButton{
 
 			@Override
 			public void mouseReleased(java.awt.event.MouseEvent e) {
+				System.out.println(state);
 				if(isDouble){
 					if(state != STATE_DUG)
 						return;
@@ -149,17 +150,17 @@ public class CellView extends JButton{
 	}
 
 	public void digChange(){
-		System.out.println("点击坐标："+data.x+","+data.y+" 状态:"+state);
 		if(state == STATE_DUG)
 			return;
 		this.setIcon(null);
-		if(data.getVal() > 0 && data.getVal() < 9)
+		if(data.getVal() > 0 && data.getVal() < 9){
 			this.setText(""+data.getVal());
+		}
 		this.setEnabled(false);
 		this.setBackground(Color.LIGHT_GRAY);
 		state = STATE_DUG;
 		data.setDug(true);
-
+		
 		bp.digReport();
 		bp.autoDigAround(data.x, data.y);
 
@@ -243,10 +244,10 @@ public class CellView extends JButton{
 	}
 	
 	public void resetView(){
+		this.setEnabled(true);
 		this.setText("");
 		this.setDisabledIcon(null);
 		this.setIcon(null);
-		this.setEnabled(true);
 		this.setBackground(null);
 	}
 }

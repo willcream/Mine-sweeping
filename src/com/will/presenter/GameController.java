@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 
 import com.will.view.Board;
 import com.will.view.Main;
+import com.will.view.MainWindow;
 
 public class GameController extends User{
 	public final String name = "GC";
@@ -24,12 +25,6 @@ public class GameController extends User{
 	private GameController(){
 		isOver = false;
 	}
-	
-	private GameController(GCBoardPresenter gcbp) {
-		bp = gcbp;
-		isOver = false;
-	}
-	
 
 	@Override
 	public boolean dig(int x, int y) {
@@ -62,7 +57,8 @@ public class GameController extends User{
 	}
 	
 	public void restart() {
-		bp.changeLevel();		
+		bp.restart();
+//		Main.resetMainWindow();
 	}
 
 	public boolean isComplete() {

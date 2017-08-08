@@ -43,7 +43,8 @@ public class GameInfo {
 	 * @param level 游戏难度，在菜单中选择
 	 */
 	public static GameInfo createGameInfo(int level){
-		gameInfo = new GameInfo(level);
+		if(gameInfo == null)
+			gameInfo = new GameInfo(level);
 		return gameInfo;
 	}
 	

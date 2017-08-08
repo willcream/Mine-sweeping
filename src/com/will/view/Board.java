@@ -77,12 +77,6 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	
 
 	private void gameover(){
-		if(GameController.getGC().isOver())
-			return;
-		else
-			GameController.getGC().setOver(true);
-		
-		
 		int res= JOptionPane.showConfirmDialog(panel, "游戏结束，是否重来？", "", JOptionPane.YES_NO_OPTION);
 		if(res == JOptionPane.NO_OPTION || res == JOptionPane.CLOSED_OPTION)
 			System.exit(0);
@@ -96,30 +90,15 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	}
 	
 	private void complete(){
-		if(GameController.getGC().isOver())
-			return;
-		else
-			GameController.getGC().setOver(true);
+		System.out.println(GameController.getGC().isOver());
 		
-		try {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					if(GameController.getGC().isOver())
-						return;
-					int res= JOptionPane.showConfirmDialog(panel, "恭喜你，通关了！是否再来？", "", JOptionPane.YES_NO_OPTION);
-					if(res == JOptionPane.NO_OPTION || res == JOptionPane.CLOSED_OPTION)
-						System.exit(0);
-					else if(res == JOptionPane.YES_OPTION){
-						//重新开始
-						restart();
-						GameController.getGC().setOver(false);
-					}
-				}
-			}).start();
-			
-		}catch(Exception e) {
-			System.out.println(e.getMessage());
+		int res= JOptionPane.showConfirmDialog(panel, "恭喜你，通关了！是否再来？", "", JOptionPane.YES_NO_OPTION);
+		if(res == JOptionPane.NO_OPTION || res == JOptionPane.CLOSED_OPTION)
+			System.exit(0);
+		else if(res == JOptionPane.YES_OPTION){
+			//重新开始
+			restart();
+			GameController.getGC().setOver(false);
 		}
 	}
 	
@@ -209,6 +188,7 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	public void autoDigAround(int x, int y) {
 		//如果这个方格挖开后是数字，那么它的周围不再挖
 		CellView thiscv = findCellView(x, y);
+		
 		if(thiscv.isNumber())
 			return;
 		
@@ -226,7 +206,6 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 				//什么都不干
 			}
 			else if(!tempcv.isDug()){
-//				System.out.println("x:"+data.x+" y:"+data.y+" val="+data.getVal()+" state="+tempcv.getState());
 				tempcv.digChange();
 			}
 		}
@@ -285,6 +264,7 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	public JPanel ready() {
 		rowNum = gameInfo.getRowNum();
 		colNum = gameInfo.getColNum();
+		panel.removeAll();
 		GridLayout gl = new GridLayout(rowNum,colNum,2,2);
 		panel.setLayout(gl);
 		
@@ -361,7 +341,6 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 			}
 		}
 		
-		System.out.println("Board---mine num： "+mineIndexList.size());
 		
 		//开始统计数字
 		for(CellView cv : cvlist){
@@ -382,7 +361,6 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 			}
 			
 		}
-		
 	}
 	
 	@Override
@@ -436,26 +414,26 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 			cv.resetData();
 			cv.resetView();
 		}
-		
 		firstBlood = true;
 		GameController.getGC().setOver(false);
 		mineIndexList = new ArrayList<>();
 		aroundIndexList = new ArrayList<>();
 		dugNum = 0;
+		mineMarkNum = 0;
 		MainWindow.getMainWindow().resetFlagTag();
 		
 	}
 
 	@Override
 	public void changeLevel() {
-		panel.removeAll();
-		ready();
+		panel = ready();
+		panel.updateUI();
 		firstBlood = true;
 		GameController.getGC().setOver(false);
 		mineIndexList = new ArrayList<>();
 		aroundIndexList = new ArrayList<>();
 		dugNum = 0;
-		MainWindow.getMainWindow().resetFlagTag();
+		mineMarkNum = 0;
 	}
 	
 	
