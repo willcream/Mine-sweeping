@@ -113,7 +113,7 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 			if(cvlist.get(i).isFlagMarked())
 				flagCounter++;
 		}
-		if(val == flagCounter || (flagCounter == 0 ))
+		if(val == flagCounter)
 			return true;
 		else
 			return false;

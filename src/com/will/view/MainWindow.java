@@ -3,6 +3,8 @@ package com.will.view;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,6 +16,7 @@ import javax.swing.JPanel;
 import com.will.model.GameInfo;
 import com.will.presenter.GameController;
 import com.will.presenter.Player;
+import com.will.presenter.WelcomePresenter;
 
 public class MainWindow extends JFrame {
 	private static MainWindow mainWindow; 
@@ -21,6 +24,7 @@ public class MainWindow extends JFrame {
 	private int flagNum = 0;
 	private GameController gc;
 	private GameInfo info;
+	private WelcomePresenter wp;
 	
 	private JPanel cellPanel;
 	private JMenuBar jmb;
@@ -45,8 +49,9 @@ public class MainWindow extends JFrame {
 		this.setVisible(true);
 	}
 	
-	public static MainWindow createMainWindow(GameInfo info, GameController gc){
+	public static MainWindow createMainWindow(GameInfo info, GameController gc,WelcomePresenter wp){
 		mainWindow = new MainWindow(info, gc);
+		mainWindow.wp = wp;
 		return mainWindow;
 	}
 	
@@ -62,11 +67,14 @@ public class MainWindow extends JFrame {
 	}
 
 	private void viewInitialize(){
+		//设置大小、位置、布局、关闭方式
 		this.setSize(info.getWindowWidth(), info.getWindowHeight());
-		System.out.println("width="+info.getWindowWidth()+" height="+info.getWindowHeight());
+		this.setLocation(300, 100);
 		this.setLayout(new BorderLayout());
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.addWindowListener(new MyWindowAdapter());
+		
 
+		//初始化窗口内的组件
 		cellPanel = gc.gamePreStart();
 		this.add(cellPanel,BorderLayout.CENTER);
 
@@ -85,7 +93,7 @@ public class MainWindow extends JFrame {
 	
 	private JMenu getOptionMenu(){
 		JMenu optionMenu = new JMenu("选项");
-		//设置选项菜单：重开、初级难度、中级难度、高级难度、退出
+		//设置选项菜单：重开、退出
 		
 		JMenuItem restartItem = new JMenuItem("重开");
 		restartItem.addActionListener(new ActionListener() {
@@ -95,47 +103,18 @@ public class MainWindow extends JFrame {
 			}
 		});
 		
-//		JMenuItem low = new JMenuItem("低级难度");
-//		low.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				info.reset(GameInfo.LEVEL_LOW);
-//				mainWindow.setSize(info.getWindowWidth(), info.getWindowHeight());
-//				GameController.getGC().restart();
-//			}
-//		});
-//		
-//		JMenuItem normal = new JMenuItem("中级难度");
-//		normal.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				info.reset(GameInfo.LEVEL_NORMAL);
-//				mainWindow.setSize(info.getWindowWidth(), info.getWindowHeight());
-//				GameController.getGC().restart();
-//			}
-//		});
-//		
-//		JMenuItem high = new JMenuItem("高级难度");
-//		high.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				info.reset(GameInfo.LEVEL_HIGH);
-//				mainWindow.setSize(info.getWindowWidth(), info.getWindowHeight());
-//				GameController.getGC().restart();
-//			}
-//		});
-//		
-		optionMenu.add(restartItem);
-//		optionMenu.addSeparator();
-//		optionMenu.add(low);
-//		optionMenu.add(normal);
-//		optionMenu.add(high);
+		JMenuItem exitItem = new JMenuItem("退出");
+		exitItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 		
+		optionMenu.add(restartItem);
+		optionMenu.add(exitItem);
 		return optionMenu;
 	}
-	
-	
-	
 	
 	
 	
@@ -156,4 +135,14 @@ public class MainWindow extends JFrame {
 		label.setText("    剩余红旗数："+flagNum);
 	}
 	
+	class MyWindowAdapter extends WindowAdapter{
+
+		@Override
+		public void windowClosing(WindowEvent e) {
+			super.windowClosing(e);
+			wp.showWelcomeFrame();
+		}
+		
+		
+	}
 }

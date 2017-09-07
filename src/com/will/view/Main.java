@@ -16,22 +16,10 @@ public class Main {
 	
 	public static void main(String[] args) {
 		GameInfo info = GameInfo.createGameInfo(GameInfo.LEVEL_LOW);
-		GameController gc = GameController.getGC();
 		
-		MainWindow.createMainWindow(info, gc);
-	}
-	
-	public static void resetMainWindow(){
-		MainWindow.getMainWindow().dispose();
+		new WelcomeFrame(info);
 		
-		try{
-			Thread.sleep(3000);
-			GameInfo info = GameInfo.getGameInfo();
-			GameController gc = GameController.getGC();
-			
-			MainWindow.createMainWindow(info, gc);
-		}catch(Exception e){
-			
-		}
+//		MainWindow.createMainWindow(info, gc);
 	}
+
 }
