@@ -103,11 +103,12 @@ public class MainWindow extends JFrame {
 			}
 		});
 		
-		JMenuItem exitItem = new JMenuItem("退出");
+		JMenuItem exitItem = new JMenuItem("选择难度");
 		exitItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
+				wp.showWelcomeFrame();
 			}
 		});
 		

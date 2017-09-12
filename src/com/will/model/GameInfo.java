@@ -16,7 +16,7 @@ public class GameInfo {
 	
 	private final int NORMAL_ROW_NUM = 16;       
 	private final int NORMAL_COL_NUM = 16;       
-	private final int NORMAL_MINE_NUM = 300;     
+	private final int NORMAL_MINE_NUM = 40;     
 	
 	private final int HIGH_ROW_NUM = 16;       
 	private final int HIGH_COL_NUM = 30;       
