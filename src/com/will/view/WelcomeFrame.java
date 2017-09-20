@@ -31,12 +31,14 @@ public class WelcomeFrame extends JFrame implements WelcomePresenter {
 		frame = this;
 		
 		this.setTitle("扫雷--14级软件2班伍天赐制作");
-		this.setSize(350, 120);
+		this.setSize(360, 130);
 		this.setLocation(300, 100);
 		this.setLayout(new BorderLayout());
-		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		initializeView();
+		this.setVisible(true);
+		
+		
 	}
 	
 	public void initializeView(){
