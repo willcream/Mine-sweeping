@@ -16,7 +16,7 @@ public class Player extends User {
 
 	private Player(String name){
 		this.name = name;
-		bp = Board.getBoard();
+//		bp = Board.getBoard();
 	}
 	
 	/**

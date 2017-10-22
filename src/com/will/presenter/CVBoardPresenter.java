@@ -57,4 +57,5 @@ public interface CVBoardPresenter extends BoardPresenter{
 	void winCheck();
 	
 	
+	
 }

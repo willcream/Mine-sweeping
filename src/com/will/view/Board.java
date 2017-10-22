@@ -10,9 +10,11 @@ import javax.swing.JPanel;
 
 import com.will.model.Cell;
 import com.will.model.GameInfo;
+import com.will.model.GlobalMsg;
 import com.will.presenter.CVBoardPresenter;
 import com.will.presenter.GCBoardPresenter;
 import com.will.presenter.GameController;
+import com.will.presenter.MainWindowPresenter;
 import com.will.presenter.Player;
 public class Board implements CVBoardPresenter,GCBoardPresenter{
 	//这里的w和h都是尺寸，不是格子数
@@ -21,30 +23,34 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 	private int rowNum;
 	private int colNum;
 	private GameInfo gameInfo;
+	private GameController gc;
 	
 	private int mineMarkNum;
 	private int dugNum;
 	
-	private Player player;
+//	private Player player;
 	private ArrayList<CellView> cvlist;
 	private ArrayList<Integer> mineIndexList;//记录的是雷在cvlist中的位置
 	private ArrayList<Integer> aroundIndexList;//主要是临时用,用于找到每个方块周围的方块，保存的是在cvlist中的位置
 	private JPanel panel;
 	private boolean firstBlood = true; //是否第一次点击，一血是我个人喜欢的叫法
-	private static Board board;
+//	private static Board board;
 	
-	public static Board getBoard(){
-		if(board == null){
-			board = new Board();
-			return board;
-		}
-		else
-			return board;
-	}
+//	public static Board getBoard(){
+//		if(board == null){
+//			board = new Board();
+//			return board;
+//		}
+//		else
+//			return board;
+//	}
 	
-	private Board(){
+	public Board(){
 		initializeData();
 		panel = new JPanel();
+		gc = GameController.getGC();
+		gc.putPresenter(GlobalMsg.S_CV_BOARD_P, this);
+		gc.putPresenter(GlobalMsg.S_GC_BOARD_P, this);
 	}
 	
 	public void initializeData(){
@@ -422,7 +428,8 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 		aroundIndexList = new ArrayList<>();
 		dugNum = 0;
 		mineMarkNum = 0;
-		MainWindow.getMainWindow().resetFlagTag();
+		//通知MainWindow重置红旗数
+		((MainWindowPresenter)gc.getPresenter(GlobalMsg.S_MAIN_WINDOW_P)).resetFlagTag();
 		
 	}
 

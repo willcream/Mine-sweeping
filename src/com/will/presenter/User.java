@@ -19,53 +19,5 @@ public abstract class User {
 	public abstract boolean dig(int x, int y);
 	public abstract void afterDug(int x, int y);
 	
-	public void digAround(int oldx, int oldy){
-//		aroundIndexList = (ArrayList<Integer>) bp.getSurround(oldx, oldy);
-//		if(aroundIndexList == null || aroundIndexList.size() == 0)
-//			return ;
-//		for(Integer i : aroundIndexList){
-//			Cell tempc = .getData();
-//			dig(tempc.x, tempc.y);
-//			digAround(tempc.x, tempc.y);
-//		}
-//		aroundIndexList = null;
-	}
 	
-//	public List<CellView> getSurround(int oldx,int oldy){
-//		//初始化周围格的列表
-//		aroundList = new ArrayList<>();
-//		
-//		int w = bp.getWidth();
-//		int h = bp.getHeight();
-//		CellView tempcv = null;
-//		if((tempcv = bp.findCellView(oldx, oldy-1)) != null){
-//			aroundList.add(tempcv);
-//		}
-//		if((tempcv = bp.findCellView(oldx, oldy+1)) != null){
-//			aroundList.add(tempcv);
-//		}
-//		if((tempcv = bp.findCellView(oldx-1, oldy)) != null){
-//			aroundList.add(tempcv);
-//		}
-//		if((tempcv = bp.findCellView(oldx-1, oldy-1)) != null){
-//			aroundList.add(tempcv);
-//		}
-//		if((tempcv = bp.findCellView(oldx-1, oldy+1)) != null){
-//			aroundList.add(tempcv);
-//		}
-//		if((tempcv = bp.findCellView(oldx+1, oldy)) != null){
-//			aroundList.add(tempcv);
-//		}
-//		if((tempcv = bp.findCellView(oldx+1, oldy-1)) != null){
-//			aroundList.add(tempcv);
-//		}
-//		if((tempcv = bp.findCellView(oldx+1, oldy+1)) != null){
-//			aroundList.add(tempcv);
-//		}
-//		
-//		if(aroundList.size() > 8){
-//			System.err.println("周围格列表出事了");
-//		}
-//		return aroundList;
-//	}
 }

@@ -1,14 +1,19 @@
 package com.will.presenter;
 
+import java.util.HashMap;
+
 import javax.swing.JPanel;
 
+import com.will.model.GlobalMsg;
 import com.will.view.Board;
 import com.will.view.Main;
 import com.will.view.MainWindow;
 
-public class GameController extends User{
+public class GameController{
 	public final String name = "GC";
 	private static GameController gc;
+	//用于存放presenter，不过太迟才想到，没能做到所有presenter在这里中心化处理
+	private static HashMap<String,MyBasePresenter> presenterMap;
 	
 	private boolean isOver = false;
 	private boolean isComplete = false;
@@ -18,6 +23,7 @@ public class GameController extends User{
 	public static GameController getGC(){
 		if(gc == null){
 			gc = new GameController();
+			presenterMap = new HashMap<>();
 		}
 		return gc;
 	}
@@ -25,21 +31,10 @@ public class GameController extends User{
 	private GameController(){
 		isOver = false;
 	}
-
-	@Override
-	public boolean dig(int x, int y) {
-		return false;
 		
-		
-	}
-
-	@Override
-	public void afterDug(int x, int y) {
-		digAround(x, y);
-	}
-	
 	public JPanel gamePreStart(){
-		bp = Board.getBoard();
+		new Board();
+		bp = (GCBoardPresenter) presenterMap.get(GlobalMsg.S_GC_BOARD_P);
 		JPanel cellPanel = bp.ready();
 		return cellPanel;
 	}
@@ -72,6 +67,15 @@ public class GameController extends User{
 	
 	public int releaseMemory(){
 		return bp.releaseMemory();
+	}
+	
+	
+	public void putPresenter(String name, MyBasePresenter presenter){
+		presenterMap.put(name, presenter);
+	}
+	
+	public MyBasePresenter getPresenter(String name){
+		return presenterMap.get(name);
 	}
 	
 	

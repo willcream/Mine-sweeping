@@ -81,7 +81,7 @@ public class WelcomeFrame extends JFrame implements WelcomePresenter {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			gameInfo.reset(level);
-			MainWindow.createMainWindow(gameInfo, gc, frame);
+			new MainWindow(gameInfo, gc, frame).setVisible(true);;
 			setVisible(false);
 		}
 		

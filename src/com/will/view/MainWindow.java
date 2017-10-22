@@ -14,12 +14,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import com.will.model.GameInfo;
+import com.will.model.GlobalMsg;
 import com.will.presenter.GameController;
+import com.will.presenter.MainWindowPresenter;
 import com.will.presenter.Player;
 import com.will.presenter.WelcomePresenter;
 
-public class MainWindow extends JFrame {
-	private static MainWindow mainWindow; 
+public class MainWindow extends JFrame implements MainWindowPresenter{
 	private int gameLevel = GameInfo.LEVEL_LOW;
 	private int flagNum = 0;
 	private GameController gc;
@@ -39,29 +40,21 @@ public class MainWindow extends JFrame {
 	}
 
 	
-	public  MainWindow(GameInfo info, GameController gc){
+	public  MainWindow(GameInfo info, GameController gc, WelcomePresenter wp){
 		//GameInfo一定要最先初始化
 		this.info = info;
 		this.gc = gc;
+		this.wp = wp;
 		flagNum = info.getMineNum();
 		
 		viewInitialize();
 		this.setVisible(true);
+		//在GC中加入这个Presenter，方便后面调用
+		gc.putPresenter(GlobalMsg.S_MAIN_WINDOW_P, this);
+		
 	}
 	
-	public static MainWindow createMainWindow(GameInfo info, GameController gc,WelcomePresenter wp){
-		mainWindow = new MainWindow(info, gc);
-		mainWindow.wp = wp;
-		return mainWindow;
-	}
 	
-	public static MainWindow getMainWindow(){
-		if(mainWindow == null)
-			mainWindow = new MainWindow();
-		return mainWindow;
-	}
-	
-
 	private void dataInitialize(){
 		
 	}

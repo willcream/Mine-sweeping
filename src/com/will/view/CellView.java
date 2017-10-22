@@ -10,8 +10,10 @@ import javax.swing.JButton;
 
 import com.will.model.Cell;
 import com.will.model.GameInfo;
+import com.will.model.GlobalMsg;
 import com.will.presenter.CVBoardPresenter;
 import com.will.presenter.GameController;
+import com.will.presenter.MainWindowPresenter;
 import com.will.presenter.Player;
 
 public class CellView extends JButton{
@@ -34,7 +36,7 @@ public class CellView extends JButton{
 	public CellView(Cell cell) {
 		data = cell;
 		state = STATE_NONE;
-		bp = Board.getBoard();
+		bp = (CVBoardPresenter) GameController.getGC().getPresenter(GlobalMsg.S_CV_BOARD_P);
 		initializeView();
 		int counter = 0;
 
@@ -178,7 +180,8 @@ public class CellView extends JButton{
 		case TO_FLAG:
 			this.setIcon(new ImageIcon("flag.png"));
 			state = STATE_FLAG;
-			MainWindow.getMainWindow().subFlagTag();
+			((MainWindowPresenter)GameController.getGC().getPresenter(GlobalMsg.S_MAIN_WINDOW_P))
+				.subFlagTag();
 			bp.flagReport(true, isMine());
 			bp.winCheck();
 			break;
@@ -186,7 +189,8 @@ public class CellView extends JButton{
 		case TO_QUESTION_MARK:
 			this.setIcon(new ImageIcon("question-mark.png"));
 			state = STATE_QUESTION_MARK;
-			MainWindow.getMainWindow().addFlagTag();
+			((MainWindowPresenter)GameController.getGC().getPresenter(GlobalMsg.S_MAIN_WINDOW_P))
+				.addFlagTag();
 			bp.flagReport(false, isMine());
 			break;
 
