@@ -53,7 +53,7 @@ public class CellView extends JButton{
 
 			@Override
 			public void mouseReleased(java.awt.event.MouseEvent e) {
-				System.out.println(state);
+//				System.out.println(state);
 				if(isDouble){
 					if(state != STATE_DUG)
 						return;
@@ -106,8 +106,9 @@ public class CellView extends JButton{
 				boolean double1 = e.getModifiersEx() == (e.BUTTON1_DOWN_MASK | e.BUTTON3_DOWN_MASK);
 				boolean double2 = e.getModifiersEx() == (e.BUTTON3_DOWN_MASK | e.BUTTON1_DOWN_MASK);
 				isDouble = double1 || double2; 
-				if(isDouble)
-					System.out.println("左右键一起按");
+				if(isDouble){
+//					System.out.println("左右键一起按");
+				}
 			}
 
 

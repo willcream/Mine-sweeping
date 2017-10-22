@@ -40,4 +40,10 @@ public interface GCBoardPresenter extends BoardPresenter {
 	void restart();
 	
 	void changeLevel();
+	
+	/**
+	 * 释放内存，尤其是cvlist的内存
+	 * @return
+	 */
+	int releaseMemory();
 }

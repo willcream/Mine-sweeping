@@ -108,6 +108,8 @@ public class MainWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
+				int testCvlistSize = gc.releaseMemory();
+				System.out.println("after dispose, cvlist size="+testCvlistSize);
 				wp.showWelcomeFrame();
 			}
 		});

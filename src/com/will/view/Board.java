@@ -361,6 +361,8 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 			}
 			
 		}
+		
+		System.out.println("cvlist size="+cvlist.size());
 	}
 	
 	@Override
@@ -435,6 +437,15 @@ public class Board implements CVBoardPresenter,GCBoardPresenter{
 		dugNum = 0;
 		mineMarkNum = 0;
 	}
+
+
+	
+	@Override
+	public int releaseMemory() {
+		cvlist.removeAll(cvlist);
+		return cvlist.size();
+	}
+	
 	
 	
 

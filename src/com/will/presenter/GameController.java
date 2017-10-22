@@ -70,5 +70,9 @@ public class GameController extends User{
 	}
 
 	
+	public int releaseMemory(){
+		return bp.releaseMemory();
+	}
+	
 	
 }
